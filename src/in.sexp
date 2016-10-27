@@ -1,0 +1,2 @@
+(.text)
+(.global _start)
