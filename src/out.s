@@ -1,2 +1,2 @@
-NIL
-NIL
+.text
+.global _start

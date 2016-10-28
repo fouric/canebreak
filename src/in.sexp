@@ -1,2 +1,2 @@
-(.text)
-(.global _start)
+(text)
+(global _start)

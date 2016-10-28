@@ -19,13 +19,23 @@
     (string
      form)
     (list
-     (command form))))
+     (directive-or-section form))))
 
-(defun command (form)
-  (case (first form)
-    (section
-     (incf *indentation-level*)
-     (decf *indentation-level*))))
+(defun directive-or-section (form)
+  (let ((command-name (first form)))
+    (cond 
+      ((eql command-name 'text)
+       ".text")
+      ((eql command-name 'global)
+       (concatenate 'string ".global " (string-downcase (second form))))
+      ((eql command-name 'section)
+       (let ((name (second form)))
+	 (concatenate 'string (string-downcase name) ":")
+	 (incf *indentation-level*)
+	 (decf *indentation-level*)))
+      )))
+
+(defun )
 
 (defun emit (object)
   (doitimes ((* *indentation-level* *indentation-spaces*))
