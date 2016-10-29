@@ -11,4 +11,4 @@ main:
     pop rbp
     ret 
 0
-NIL
+.size main, .-main

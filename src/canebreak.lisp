@@ -49,6 +49,8 @@
 		 (strcat ".global " (string-downcase (nth 1 form))))
 		((eql command-name 'type)
 		 (strcat ".type " (string-downcase (nth 1 form)) ", " (string-downcase (nth 2 form))))
+		((eql command-name 'size)
+		 (strcat ".size " (join-commas (string-downcase (nth 1 form)) (string-downcase (nth 2 form)))))
 		((eql command-name 'section)
 		 (let ((name (nth 1 form)))
 		   (emit (concatenate 'string (string-downcase name) ":"))
