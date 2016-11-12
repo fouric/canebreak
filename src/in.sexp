@@ -1,3 +1,4 @@
+(
 (file "test.c")
 (intel-syntax noprefix)
 (text)
@@ -13,3 +14,4 @@
     (ret))
 
 (size main .-main)
+)

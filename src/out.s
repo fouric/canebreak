@@ -10,5 +10,5 @@ main:
     mov eax, DWORD PTR [rbp-4]
     pop rbp
     ret 
-0
+
 .size main, .-main
