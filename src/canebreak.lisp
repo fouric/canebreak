@@ -14,7 +14,7 @@
 (defun resource (path)
   (asdf:system-relative-pathname 'canebreak path))
 
-(defun canebreak (in-filename out-filename)
+(defun canebreak (&optional (in-filename (resource "src/in.sexp")) (out-filename (resource "src/out.s")))
   (setf *indentation-level* 0)
   (with-open-file (out out-filename
                        :direction :output
@@ -43,39 +43,55 @@
              form)
             (number
              ;; just emit numbers literally? feels like it should be #~a
-             (format nil "~a" form))
+             (format nil "#~a" form))
             (symbol
-             ;; uh shouldn't this be STRING-UPCASE?
              (if (member form *registers*)
+                 (string-upcase form)
                  (string-downcase form)))
             (list
              (let ((command-name (first form)))
                (cond
-                 ((eql command-name 'file)
-                  (strcat ".file \"" (nth 1 form) "\""))
-                 ((eql command-name 'intel-syntax)
-                  (strcat ".intel_syntax " (string-downcase (nth 1 form))))
-                 ((eql command-name 'text)
-                  ".text")
-                 ((or (eql command-name 'global) (eql command-name 'globl))
-                  (strcat ".global " (string-downcase (nth 1 form))))
-                 ((eql command-name 'type)
-                  (strcat ".type " (string-downcase (nth 1 form)) ", " (string-downcase (nth 2 form))))
-                 ((eql command-name 'size)
-                  (strcat ".size " (join-commas (string-downcase (nth 1 form)) (string-downcase (nth 2 form)))))
-                 ((eql command-name 'section)
-                  (let ((name (nth 1 form)))
-                    (emit (concatenate 'string (string-downcase name) ":"))
-                    (incf *indentation-level*)
-                    (mapcar (lambda (f) (process f t)) (cddr form))
-                    (decf *indentation-level*)
-                    ""))
-                 ((member (first form) *instructions*)
-                  (apply #'strcat (append (list (string-downcase (first form)) " " (apply #'join-commas (mapcar #'process (rest form)))))))))))))
+                 ((member command-name *instructions*)
+                  ;(apply #'strcat (append (list (string-upcase (first form)) " " (apply #'join-commas (mapcar #'process (rest form))))))
+                  (instruction form)
+                  )
+                 ((member command-name *directives*)
+                  (directive form))))))))
     (when emit
       (emit retval))
     retval))
 
-(defparameter *registers* '(rax rbx rcx rdx rsi rdi rbp rsp r8 r9 r10 r11 r12 r13 r14 r15
-                            eax ebx ecx edx esi edi edp esp))
-(defparameter *instructions* '(push mov pop ret))
+(defun directive (form)
+  (case (first form)
+    (text
+     ".text")
+    (global
+     (strcat ".global " (string-downcase (nth 1 form))))
+    (type
+     (strcat ".type " (join-commas (string-downcase (nth 1 form))) (string-downcase (nth 2 form))))
+    (size
+     (strcat ".size " (join-commas (string-downcase (nth 1 form)) (string-downcase (nth 2 form)))))
+    (equ
+     (strcat ".equ " (join-commas (string-upcase (nth 1 form)) (format nil "~a" (nth 2 form)))))
+    (label
+     (let ((name (nth 1 form)))
+       (emit (concatenate 'string (string-downcase name) ":"))
+       (incf *indentation-level*)
+       (mapcar (lambda (f) (process f t)) (cddr form))
+       (decf *indentation-level*)
+       ""))))
+
+(defun instruction (form)
+  "takes the *whole* form of an instruction"
+  (check-type form list)
+  (labels ((process-arg (arg)
+             (etypecase arg
+               (string arg)
+               (symbol (string-upcase arg))
+               (list (strcat "[" (apply #'strcat (mapcar #'process-arg arg)) "]")))))
+    (strcat (process-arg (first form)) " " (apply #'join-commas (mapcar #'process-arg (rest form))))))
+
+(defparameter *registers* '(r0 r1 r2 r3 r4 r5 r6 r7
+                            r8 r9 r10 r11 r12 r13 r14 r15))
+(defparameter *directives* '(text global type size equ label))
+(defparameter *instructions* '(ldr ldrh mov))

@@ -1,14 +1,12 @@
-.file "test.c"
-.intel_syntax noprefix
 .text
-.global main
-.type main, @function
-main:
-    push rbp
-    mov rbp, rsp
-    mov DWORD PTR [rbp-4], 42
-    mov eax, DWORD PTR [rbp-4]
-    pop rbp
-    ret 
+.global _start
+_start:
+    .equ NUM, 4
+    LDR R1, =MULTIPLICANDS
+    LDR R2, =MULTIPLIERS
+    LDR R3, =PRODUCTS
+    MOV R4, #NUM
 
-.size main, .-main
+next:
+    LDRH R6, [R1]
+

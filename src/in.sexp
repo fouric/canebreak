@@ -1,17 +1,14 @@
 (
-(file "test.c")
-(intel-syntax noprefix)
 (text)
-(globl main)
-(type main @function)
+(global _start)
 
-(section main
-    (push rbp)
-    (mov rbp rsp)
-    (mov "DWORD PTR [rbp-4]" 42)
-    (mov eax "DWORD PTR [rbp-4]")
-    (pop rbp)
-    (ret))
+(label _start
+  (equ num 4)
+  (ldr r1 =multiplicands)
+  (ldr r2 =multipliers)
+  (ldr r3 =products)
+  (mov r4 "#NUM"))
 
-(size main .-main)
+(label next
+  (ldrh r6 "[R1]"))
 )
