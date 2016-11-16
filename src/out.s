@@ -6,6 +6,9 @@ _start:
     LDR R2, =MULTIPLIERS
     LDR R3, =PRODUCTS
     MOV R4, #NUM
+    inner:
+        MOV R1, R0
+    
 
 next:
     LDRH R6, [R1]

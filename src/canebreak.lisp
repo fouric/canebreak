@@ -52,14 +52,21 @@
              (let ((command-name (first form)))
                (cond
                  ((member command-name *instructions*)
-                  ;(apply #'strcat (append (list (string-upcase (first form)) " " (apply #'join-commas (mapcar #'process (rest form))))))
-                  (instruction form)
-                  )
+                  (instruction form))
                  ((member command-name *directives*)
                   (directive form))))))))
     (when emit
       (emit retval))
     retval))
+
+(defun argument (form)
+  (etypecase form
+    (symbol
+     (string-upcase form))
+    (number
+     (format nil "~a" form))
+    (string
+     form)))
 
 (defun directive (form)
   (case (first form)
@@ -68,17 +75,16 @@
     (global
      (strcat ".global " (string-downcase (nth 1 form))))
     (type
-     (strcat ".type " (join-commas (string-downcase (nth 1 form))) (string-downcase (nth 2 form))))
+     (strcat ".type " (apply #'join-commas (mapcar #'string-downcase (rest form)))))
     (size
-     (strcat ".size " (join-commas (string-downcase (nth 1 form)) (string-downcase (nth 2 form)))))
+     (strcat ".size " (apply #'join-commas (mapcar #'string-downcase (rest form)))))
     (equ
-     (strcat ".equ " (join-commas (string-upcase (nth 1 form)) (format nil "~a" (nth 2 form)))))
+     (strcat ".equ " (apply #'join-commas (mapcar #'argument (rest form)))))
     (label
-     (let ((name (nth 1 form)))
-       (emit (concatenate 'string (string-downcase name) ":"))
-       (incf *indentation-level*)
-       (mapcar (lambda (f) (process f t)) (cddr form))
-       (decf *indentation-level*)
+     (let ((label-name (nth 1 form)))
+       (emit (concatenate 'string (string-downcase label-name) ":"))
+       (let ((*indentation-level* (1+ *indentation-level*)))
+         (mapcar (lambda (f) (process f t)) (cddr form)))
        ""))))
 
 (defun instruction (form)
