@@ -1,13 +1,23 @@
-	.file	"test.c"
-	.intel_syntax noprefix
-	.text
-	.globl	main
-	.type	main, @function
-main:
-	push	rbp
-	mov	rbp, rsp
-	mov	DWORD PTR [rbp-4], 42
-	mov	eax, DWORD PTR [rbp-4]
-	pop	rbp
-	ret
-	.size	main, .-main
+.text
+.global _start
+_start:
+.equ NUM, 4
+LDR R1,=MULTIPLICANDS
+LDR R2, =MULTIPLIERS
+LDR R3, =PRODUCTS
+MOV R4, #NUM
+NEXT: LDRH R6,[R1]
+LDRH R7, [R2]
+MUL R8, R6, R7
+STR R8, [R3]
+ADD R1,R1,#2
+ADD R2,R2,#2
+ADD R3,R3,#4
+SUBS R4,#1
+BNE NEXT
+NOP
+.data
+MULTIPLICANDS: .HWORD 0x1111, 0x2222, 0x3333, 0x4444
+MULTIPLIERS: .HWORD 0x1111, 0x2222, 0x3333, 0x4444
+PRODUCTS: .WORD 0x0, 0x0, 0x0, 0x0
+.END

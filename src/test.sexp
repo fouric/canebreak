@@ -1,0 +1,26 @@
+(
+(text)
+(global _start)
+(label _start
+  (equ num 4)
+  (ldr r1 =multiplicands)
+  (ldr r2 =multipliers)
+  (ldr r3 =products)
+  (mov r4 \#num))
+(label next
+  (ldrh r6 (r1))
+  (ldrh r7 (r2))
+  (mul r8 r6 r7)
+  (str r8 (r3))
+  (add r1 r1 \#2)
+  (add r2 r2 \#2)
+  (add r3 r3 \#4)
+  (subs r4 \#1)
+  (bne next)
+  (nop))
+(data
+  (multiplicands hword 0x1111 0x2222 0x3333 0x4444)
+  (multipliers hword 0x1111 0x2222 0x3333 0x4444)
+  (products word 0x0 0x0 0x0 0x0))
+(end)
+)
