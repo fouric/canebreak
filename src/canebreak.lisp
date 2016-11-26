@@ -9,8 +9,9 @@
 (defparameter *directives* '(text global type size equ label data text end))
 (defparameter *instructions* '(ldr ldrh ldrb
                                str strh strb
-                               bne beq ble bal
+                               bne beq ble bal b
                                add subs mul
+                               and
                                mov
                                cmp tst
                                nop))
@@ -91,7 +92,9 @@ is replaced with replacement."
          ((member command-name *instructions*)
           (instruction form))
          ((member command-name *directives*)
-          (directive form)))))))
+          (directive form))
+         (t
+          (error "unknown thing: ~s" command-name)))))))
 
 (defun argument (form)
   (etypecase form
@@ -144,6 +147,5 @@ is replaced with replacement."
                 (format nil "#~a" arg)))))
     (emit (strcat (process-arg (first form)) " " (apply #'join-commas (mapcar #'process-arg (rest form)))))))
 
-(canebreak)
+(canebreak "/home/fouric/code/ccs-workspace/playground/playground.sexp" "/home/fouric/code/ccs-workspace/playground/playground.s")
 ;;(sb-ext:exit)
-
