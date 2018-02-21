@@ -1,7 +1,3 @@
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (load "/home/fouric/other-code/quicklisp/setup.lisp")
-  (funcall (find-symbol "QUICKLOAD" 'ql) :fouriclib))
-
 (defparameter *out-file* nil)
 (defparameter *indentation-level* 0)
 (defparameter *indentation-spaces* 4)
@@ -58,6 +54,7 @@ is replaced with replacement."
     (mapcar #'process (fouriclib:read-file in-filename))
     (setf *out-file* nil)))
 
+;; either get something from alexandria or put in fouriclib
 (defun strcat (&rest strings)
   (apply #'concatenate (cons 'string strings)))
 
@@ -146,6 +143,3 @@ is replaced with replacement."
                (number
                 (format nil "#~a" arg)))))
     (emit (strcat (process-arg (first form)) " " (apply #'join-commas (mapcar #'process-arg (rest form)))))))
-
-;;(canebreak "/home/fouric/code/ccs-workspace/playground/playground.sexp" "/home/fouric/code/ccs-workspace/playground/playground.s")
-;;(sb-ext:exit)
