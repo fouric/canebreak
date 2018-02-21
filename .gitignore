@@ -1,2 +1,6 @@
 *.fasl
 *#.*
+canebreak-038.txt
+esdis.png
+src/mainline.s
+src/mainline.sexp

@@ -1,0 +1,4 @@
+inbox:
+  (.text) is an *assembler directive* and interpreted by a function that eventually emits ".text"
+  (label next) is also an *assembler directive* but can optionally take arguments that it sends to the standard processing function
+  define functions in package and use :use :cl with shadowing?

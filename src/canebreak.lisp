@@ -147,5 +147,5 @@ is replaced with replacement."
                 (format nil "#~a" arg)))))
     (emit (strcat (process-arg (first form)) " " (apply #'join-commas (mapcar #'process-arg (rest form)))))))
 
-(canebreak "/home/fouric/code/ccs-workspace/playground/playground.sexp" "/home/fouric/code/ccs-workspace/playground/playground.s")
+;;(canebreak "/home/fouric/code/ccs-workspace/playground/playground.sexp" "/home/fouric/code/ccs-workspace/playground/playground.s")
 ;;(sb-ext:exit)
