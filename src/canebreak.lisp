@@ -104,7 +104,7 @@ is replaced with replacement."
 
 (defun directive (form)
   (let ((name (first form)))
-    (fouriclib:fn-case (first form) #'member
+    (alexandria:switch ((first form) :test 'member)
       ('(text end)
         (emit (strcat "." (string-downcase name))))
       ('(global type size)

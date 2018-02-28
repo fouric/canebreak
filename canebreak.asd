@@ -16,4 +16,4 @@
     :serial t
     :pathname "src"
     :components ((:file "canebreak"))
-    :depends-on (:fouriclib))
+    :depends-on (:fouriclib :alexandria))
