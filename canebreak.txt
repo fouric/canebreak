@@ -1,0 +1,47 @@
+goal: to create an s-expression-based assembly syntax and coupled assembler and editor
+
+todo:
+    dispatch symbols starting with a dot to the directive handler, dispatch other symbols to argument handler dispatcher
+    take output from canebreak and put into gcc toolchain tools
+    create bare minimum canebreak s-expression layer over assembly, then a minimal language on top of assembly, then full low-level language
+    build list of sections, and each section has list of instructions, as you go through the program. then, after all parsing has been completed, dispatch file output/printing to a separate block of code - separate AST generation from output!
+
+inbox:
+    evaluation of an assembly form e.g. (mov eax r0) should push that instruction onto a list for the current section or whatever - separate assembly assembly logic from printing logic!
+    for MIPS assembler, have option to automatically insert instructions in branch delay slot to allow the input to be prettier
+    neo-canebreak:
+        instead of emitting instructions as we go along, we'll collect and then emit
+        layers:
+            line-based psuedo-s-expression format
+            ...
+            rename-literals pass (foo-sym -> FOO_SYM)
+            rename-regs pass (r1 -> $r1)
+            true s-expression format that directly maps to assembly - only need to join with commas
+            raw assembly to feed to gas
+            (object code)
+
+imperative:
+    a single pass isn't going to do it; you're going to have to create an internal ast/object tree on the first round and then do semantic analysis, table generation, object code placement/layout, and finally output in separate stages
+    since you're rewriting gas, you might as well rewrite gdb, linkers and loaders as well; for gdb, look up articles online (ioctls?) or strace -o + tail -f as stepping
+
+ideas:
+    mode where, as you type in the s-expression syntax, it blurs out and is overlayed by the translated assembly
+    editor: floating window with constant values for symbols
+    for (str r1 [r2]) don't make user type parens
+    cache rendered "str" texture in (str r1 (r2)) into texture, don't need to store letters as separate textures
+    parameterized code: (BL (delay R0 R7)) "create a version of delay that takes delay duration in R0 and uses R7 as counter" (IRL: DELAY only needs one parameter and steps it down?)
+    are # (arm) and $ (x86) really necessary before literals?
+
+The idea behind canebreak is to develop a more elegant, precise, and flexible assembler language. Part of doing this entails using an s-expression format for the syntax. As individual assembly instructions will have their own forms, and they are usually rather short, until the editor is developed, there will be a tool that takes a slightly less-well-formed syntax and converts it into proper s-expression form. The less-well-formed syntax will probably just omit the per-instruction parentheses and replace them with newlines and outer parentheses:
+
+(section .text
+  (label main
+    mov eax #0
+    retq))
+
+will be converted to
+
+(section .text
+  (label main
+    (mov eax #0)
+    (retq)))
