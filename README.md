@@ -1,8 +1,16 @@
-# canebreak
+# what canebreak?
 
-canebreak is a tool that converts an s-expression syntax form of assembly to the standard GNU form of ARM assembly. Add it to your `quicklisp/local-projects` directory, install [fouriclib](https://github.com/fouric/fouriclib), `(ql:quickload :canebreak)`, then just `(canebreak #p"/path/to/input/file" #p"/path/to/output/file")`
+canebreak is a tool that converts an s-expression syntax form of assembly to the standard GNU form of ARM assembly. Add it to your `quicklisp/local-projects` directory, install [cl-fouric](https://github.com/fouric/cl-fouric), `(ql:quickload :canebreak)`, then just `(canebreak #p"/path/to/input/file" #p"/path/to/output/file")`
 
-# Example
+# why canebreak?
+
+Right now there is absolutely no reason to use canebreak for anything. For that matter, you *cannot* use canebreak for anything, as it is completely nonfunctional.
+
+However, I would like to convince you that canebreak is worth watching and/or contributing to. I will attempt to do so by claiming that I am extremely interested in building an *ergonomic*, *expressive* high-level language-like syntax over assembly through the development of a series of *transparent layers* (= easy to understand and modify) which are translated to each other through a micropass-like "compiler" tool. Furthermore, I claim that I am motivated to actually invest effort into canebreak, because of my interest in both expressive, powerful, high-level languages and electrical engineering/hardware/low-level programming - and so, *eventually* I will invest some nontrivial effort into canebreak, and make it usable and perhaps even *useful* for you, the reader of this document.
+
+As an aside: why not a different tool than canebreak that does the same thing? Well, I don't know of any other Lisp layers over assembly - contact me if you do.
+
+# how canebreak?
 
 Input:
 
